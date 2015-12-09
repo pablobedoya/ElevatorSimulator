@@ -5,7 +5,7 @@ package core;
  */
 public class Request {
 	
-    protected /*@ spec_public @*/ int stopFloor = 0;
+    protected /*@ spec_public @*/ int stopFloor = 0; //@ in floor;
     protected /*@ spec_public @*/ Direction direction;
 
     /*@	ensures \result == stopFloor; @*/

@@ -4,9 +4,9 @@ package core;
  * Objeto de estado do elevador
  */
 public class ElevatorStatus {
-    private /*@ spec_public @*/ int currentFloor = 1;
+    private /*@ spec_public @*/ int currentFloor = 1; //@ in floor;
     private /*@ spec_public @*/ Direction direction = Direction.UP;
-    private /*@ spec_public @*/ int targetFloor = 0;
+    private /*@ spec_public @*/ int targetFloor = 0; //@ in floor;
     private /*@ spec_public @*/ boolean isOpen = false;
     private /*@ spec_public @*/ boolean isMoving = true;
     

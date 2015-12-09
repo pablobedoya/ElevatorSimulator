@@ -10,6 +10,8 @@ import java.util.Map;
  * All classes want to get the event listeners / transmit capabilities need to extend this base class
  */
 public class EventEmitter {
+	//@ model instance int floor;
+	
     /**
      * Adding event listeners
      * @param type

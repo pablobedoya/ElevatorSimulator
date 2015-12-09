@@ -6,8 +6,8 @@ import event.EventEmitter;
  * Passageiros do elevador
  */
 public class Human extends EventEmitter{
-    private /*@ spec_public @*/ int currentFloor = 0;
-    private /*@ spec_public @*/ int targetFloor = 0;
+    private /*@ spec_public @*/ int currentFloor = 0; //@ in floor;
+    private /*@ spec_public @*/ int targetFloor = 0; //@ in floor;
     private /*@ spec_public @*/ int weight = 0;
     private /*@ spec_public @*/ String name;
     

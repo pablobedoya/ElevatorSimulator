@@ -4,7 +4,7 @@ package core;
  * Request an elevator from floor
  */
 public class OuterRequest extends Request {
-    private /*@ spec_public @*/ int currentFloor; // floor where the button was pressed
+    private /*@ spec_public @*/ int currentFloor; //@ in floor;
     private /*@ spec_public non_null @*/ Human presser; // User who pressed the button
 
     /*@ requires currentFloor >= 0;

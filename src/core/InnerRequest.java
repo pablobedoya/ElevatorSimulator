@@ -4,8 +4,8 @@ package core;
  * Request an elevator from inside elevator
  */
 public class InnerRequest extends Request {
-    private /*@ spec_public @*/ int currentFloor; // elevator current floor
-    private /*@ spec_public @*/ int targetFloor; // target floor
+    private /*@ spec_public @*/ int currentFloor; //@ in floor;
+    private /*@ spec_public @*/ int targetFloor; //@ in floor;
     private /*@ spec_public non_null @*/ Human presser; // User who is inside
 
     /*@	ensures \result == currentFloor; @*/
