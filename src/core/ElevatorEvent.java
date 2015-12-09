@@ -3,10 +3,10 @@ package core;
 import event.EventType;
 
 /**
- * 电梯事件类型
+ * Tipo de evento do elevador
  */
 public class ElevatorEvent extends EventType {
-    // 定义具体事件,模仿枚举
+    // Defini��o de eventos espec�ficos, imitando enum
     public static ElevatorEvent
             LAUNCH = stub(),
             STOP = stub(),

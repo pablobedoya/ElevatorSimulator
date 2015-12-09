@@ -154,7 +154,6 @@ public class Elevator extends EventEmitter{
             }
         }).collect(Collectors.toList());
 
-
         // third case
         List<Request> list3 = requests.stream().filter( req -> {
             // same direction
