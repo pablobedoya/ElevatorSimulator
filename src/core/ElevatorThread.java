@@ -12,7 +12,7 @@ public class ElevatorThread implements Runnable{
     private /*@ spec_public non_null @*/ ElevatorStatus status;
     
     /*@ public initially 
-	  @		elevator != null @*/
+	  @		elevator != null; @*/
     public ElevatorThread(Elevator elev) {
         elevator = elev;
         status = elev.status;

@@ -39,7 +39,7 @@ public class Elevator extends EventEmitter{
      * @param presser
      * @return
      */
-    /*@	requires (direction == UP || direction == DOWN);
+    /*@	requires (direction == Direction.UP || direction == Direction.DOWN);
       @	requires currentFloor >= 0;
       @	requires presser != null;
       @ assignable requests;
