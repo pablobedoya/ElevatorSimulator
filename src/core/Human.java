@@ -10,7 +10,13 @@ public class Human extends EventEmitter{
     private /*@ spec_public @*/ int targetFloor = 0;
     private /*@ spec_public @*/ int weight = 0;
     private /*@ spec_public @*/ String name;
+    
+  //@ public invariant 0 <= targetFloor;
+  //@ public invariant 0 <= currentFloor;
+  //@ public invariant 0 < name.length();
 
+  //@ public invariant 0 <= weight && weight <= 150;
+    
     private /*@ spec_public non_null @*/ Elevator elevator;
 
     public Human() {
