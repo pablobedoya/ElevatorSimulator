@@ -26,7 +26,7 @@ public class ElevatorStatus {
 		return direction;
 	}
 	
-	/*@ requires d >= 0;
+	/*@ requires d != null;
 	  @	ensures direction == d; @*/
 	public void setDirection(Direction d) {
 		direction = d;
@@ -48,8 +48,7 @@ public class ElevatorStatus {
 		return isOpen;
 	}
 	
-	/*@ requires open != null;
-	  @	ensures isOpen == open; @*/
+	/*@	ensures isOpen == open; @*/
 	public void setOpen(boolean open) {
 		isOpen = open;
 	}
@@ -59,8 +58,7 @@ public class ElevatorStatus {
 		return isMoving;
 	}
 	
-	/*@ requires moving != null;
-	  @	ensures isMoving == moving; @*/
+	/*@	ensures isMoving == moving; @*/
 	public void setMoving(boolean moving) {
 		isMoving = moving;
 	}

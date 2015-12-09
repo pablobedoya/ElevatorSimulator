@@ -63,10 +63,10 @@ public class InnerRequest extends Request {
       @ assignable direction;
       @ also
 	  @		requires currentFloor > targetFloor;
-	  @		ensures direction = Direction.DOWN;
+	  @		ensures direction == Direction.DOWN;
 	  @ also
 	  @		requires currentFloor < targetFloor;
-	  @		ensures direction = Direction.DOWN; @*/
+	  @		ensures direction == Direction.DOWN; @*/
     private void setDirection(){
         if(currentFloor == 0 || targetFloor == 0) return;
 

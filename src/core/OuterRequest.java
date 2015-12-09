@@ -14,11 +14,10 @@ public class OuterRequest extends Request {
         stopFloor = currentFloor;
     }
 
-    /*@ requires (dir == UP ||
-    @		dir == DOWN);
-	@	assignable direction;
-	@	ensures direction == dir;
-	@	ensures \result == OuterRequest; @*/
+    /*@ requires (dir == Direction.UP || dir == Direction.DOWN);
+	  @	assignable direction;
+	  @	ensures direction == dir;
+	  @	ensures \result == OuterRequest; @*/
     public OuterRequest setDirection(Direction dir) {
         direction = dir;
         return this;

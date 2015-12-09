@@ -93,7 +93,7 @@ public class Human extends EventEmitter{
         return elevator;
     }
 
-    /*@ requires elev >= 0;
+    /*@ requires elev != null;
 	  @	ensures elevator == elev;
 	  @	ensures \result == Human; @*/
     public Human setElevator(Elevator elev) {

@@ -17,10 +17,11 @@ public class EventEmitter {
      */
 	/*@	requires type != null;
       @	requires callback != null;
-      @ assignable callbacks;
-      @ ensures callbacks.size() == \old(callbacks.size() + 1)
-	  @      && callbacks.get(\old(callbacks.size()+1)).equals(callback); @*/
-	public void on(EventType type, Callback callback)  {
+      @ assignable callbackMap;
+      @ ensures callbackMap != null;
+      @ ensures (callbackMap.get(type).size() == \old(callbackMap).get(type).size() + 1)
+      @ 	&& callbackMap.get(type).get(\old(callbackMap.get(type).size()+1)).equals(callback); @*/
+	public void on(EventType type, Callback callback) {
         List<Callback> callbacks = getCallbacks(type);
         callbacks.add(callback);
     }
@@ -31,12 +32,14 @@ public class EventEmitter {
      * @param data
      * @param <T>
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
 	public <T> void emit(EventType type, T... data){
         List<Callback> callbacks = getCallbacks(type);
         callbacks.stream().forEach( callback -> callback.run(data.length>0?data[0]:null));
     }
 
-	private Map<EventType,List<Callback>> callbackMap = new HashMap<EventType,List<Callback>>();
+    @SuppressWarnings("rawtypes")
+	private /*@ spec_public @*/ Map<EventType,List<Callback>> callbackMap = new HashMap<EventType,List<Callback>>();
 
     /**
      * Get a list of specified event type callback function
@@ -45,9 +48,9 @@ public class EventEmitter {
      * @return
      */
     /*@	requires type != null;
-      @ assignable callbacks;
-      @ ensures callbacks.size() == \old(callbacks.size() + 1);
-      @ ensures \result == callbacks; @*/
+      @ assignable callbackMap;
+      @ ensures callbackMap.get(type).size() == \old(callbackMap.get(type).size() + 1);
+      @ ensures \result == callbackMap.get(type); @*/
     @SuppressWarnings("rawtypes")
 	private List<Callback> getCallbacks(EventType type){
         List<Callback> callbacks = callbackMap.get(type);

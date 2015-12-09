@@ -8,11 +8,12 @@ import util.Log;
 public class ElevatorThread implements Runnable{
     public static int TIME_INTERVAL = 1000;
 
-    private Elevator ele;
-    private ElevatorStatus status;
-    public ElevatorThread(Elevator elevator){
-        this.ele = elevator;
-        this.status = elevator.status;
+    private /*@ spec_public non_null @*/ Elevator elevator;
+    private /*@ spec_public non_null @*/ ElevatorStatus status;
+    
+    public ElevatorThread(Elevator elev) {
+        elevator = elev;
+        status = elev.status;
     }
 
     @Override
@@ -22,12 +23,12 @@ public class ElevatorThread implements Runnable{
             if(status.isMoving() && status.getCurrentFloor() == status.getTargetFloor()){
                 status.setOpen(true);
                 status.setMoving(false);
-                ele.emit(ElevatorEvent.OPEN, status.getCurrentFloor());
+                elevator.emit(ElevatorEvent.OPEN, status.getCurrentFloor());
             }
             // fechado
             else if(status.isOpen()){
                 status.setOpen(false);
-                ele.emit(ElevatorEvent.CLOSE, status.getCurrentFloor());
+                elevator.emit(ElevatorEvent.CLOSE, status.getCurrentFloor());
             }
             // Se nao alcancou o piso de destino, continuar em movimento
             else if(status.getTargetFloor() != 0 && status.getCurrentFloor() != status.getTargetFloor()){
@@ -36,11 +37,11 @@ public class ElevatorThread implements Runnable{
 
                 status.setMoving(true);
 
-                ele.emit(ElevatorEvent.MOVING, status.getCurrentFloor());
+                elevator.emit(ElevatorEvent.MOVING, status.getCurrentFloor());
             }
             // em espera
             else{
-                ele.emit(ElevatorEvent.PENDING);
+                elevator.emit(ElevatorEvent.PENDING);
             }
 
             try {

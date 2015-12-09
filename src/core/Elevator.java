@@ -5,7 +5,7 @@ import event.EventEmitter;
 
 import java.util.LinkedList;
 import java.util.List;
-//import java.util.stream.Collectors;
+import java.util.stream.Collectors;
 
 public class Elevator extends EventEmitter{
     // Request list for elevator
@@ -25,10 +25,8 @@ public class Elevator extends EventEmitter{
 
         this.on(ElevatorEvent.OPEN, data -> {
             int currentFloor = (Integer) data;
-            /*
             requests = requests.stream().filter((req) -> !(req.stopFloor == currentFloor))
                     .collect(Collectors.toList());
-                    */
         });
 
         this.on(ElevatorEvent.CLOSE, data -> updateTarget());
@@ -125,7 +123,6 @@ public class Elevator extends EventEmitter{
         // 3. Going up request, but the floor request is lower than the elevator current floor
 
         // first case
-        /*
         List<Request> list1 = requests.stream().filter( req -> {
             // same direction
             boolean isSame = req.getDirection() == currentDirection;
@@ -182,7 +179,6 @@ public class Elevator extends EventEmitter{
         requests.addAll(list1);
         requests.addAll(list2);
         requests.addAll(list3);
-        */
     }
 
     /*@	requires type != null;

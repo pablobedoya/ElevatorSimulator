@@ -13,8 +13,8 @@ public class Request {
         return stopFloor;
     }
 
-    /*@	requires direction == UP ||
-      @		direction == DOWN;
+    /*@	requires direction == Direction.UP ||
+      @		direction == Direction.DOWN;
       @	ensures \result == direction; @*/
     public /*@ pure @*/ Direction getDirection() {
         return direction;
