@@ -1,17 +1,22 @@
 package core;
 
 /**
- * 电梯请求
+ * Elevator request
  */
 public class Request {
-    protected int stopFloor = 0;
-    protected Direction direction;
+	
+    protected /*@ spec_public @*/ int stopFloor = 0;
+    protected /*@ spec_public @*/ Direction direction;
 
-    public int getStopFloor() {
+    /*@	ensures \result == stopFloor; @*/
+    public /*@ pure @*/ int getStopFloor() {
         return stopFloor;
     }
 
-    public Direction getDirection() {
+    /*@	requires direction == UP ||
+      @		direction == DOWN
+      @	ensures \result == direction; @*/
+    public /*@ pure @*/ Direction getDirection() {
         return direction;
     }
 }

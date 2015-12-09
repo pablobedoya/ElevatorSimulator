@@ -1,38 +1,58 @@
 package core;
 
 /**
- * 外部电梯请求
- * 每次在电梯外部按下电梯按钮就是一个请求
+ * Request an elevator from floor
  */
-public class OuterRequest extends Request{
-    private int currentFloor; // 按下电梯按钮时的楼层
-    private Human presser; // 按按钮的人
+public class OuterRequest extends Request {
+    private /*@ spec_public @*/ int currentFloor; // floor where the button was pressed
+    private /*@ spec_public non_null @*/ Human presser; // User who pressed the button
 
+    /*@ requires currentFloor >= 0;
+	@	assignable stopFloor;
+	@	ensures stopFloor == currentFloor; @*/
     public OuterRequest(){
         stopFloor = currentFloor;
     }
 
-    public OuterRequest setDirection(Direction direction) {
-        this.direction = direction;
+    /*@ requires (dir == UP ||
+    @		dir == DOWN);
+	@	assignable direction;
+	@	ensures direction == dir;
+	@	ensures \result == OuterRequest; @*/
+    public OuterRequest setDirection(Direction dir) {
+        direction = dir;
         return this;
     }
 
-    public int getCurrentFloor() {
+    /*@	requires currentFloor >= 0;
+     @ 	ensures \result == currentFloor; @*/
+    public /*@ pure @*/ int getCurrentFloor() {
         return currentFloor;
     }
 
-    public OuterRequest setCurrentFloor(int currentFloor) {
-        this.currentFloor = currentFloor;
-        this.stopFloor = currentFloor;
+    /*@ requires curFloor >= 0;
+	@	assignable currentFloor;
+	@	assignable stopFloor;
+	@	ensures currentFloor == curFloor;
+	@	ensures stopFloor == curFloor;
+	@	ensures \result == OuterRequest; @*/
+    public OuterRequest setCurrentFloor(int curFloor) {
+        currentFloor = curFloor;
+        stopFloor = curFloor;
         return this;
     }
 
-    public Human getPresser() {
+    /*@	ensures \result == presser; @*/
+    public /*@ pure @*/ Human getPresser() {
         return presser;
     }
 
-    public OuterRequest setPresser(Human presser) {
-        this.presser = presser;
+    /*@ requires pres != null;
+	@	assignable presser;
+	@	ensures presser == pres;
+	@	ensures \result == OuterRequest; @*/
+    public OuterRequest setPresser(Human pres) {
+        presser = pres;
         return this;
     }
 }
