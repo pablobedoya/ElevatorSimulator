@@ -1,8 +1,9 @@
 package event;
 
 /**
- * 通用事件类型
+ * Generic event type
  */
 public class EventType{
-    public static int BEGIN, END;
+    public static int BEGIN;
+    public static int END;
 }

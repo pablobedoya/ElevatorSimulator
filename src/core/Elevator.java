@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class Elevator extends EventEmitter{
     // Request list for elevator
-    private /*@ spec_public @*/ List<Request> requests = new LinkedList<>();
+    private /*@ spec_public @*/ List<Request> requests = new LinkedList<Request>();
     /*@ spec_public @*/ ElevatorStatus status = new ElevatorStatus();
 
     /**
@@ -21,7 +21,7 @@ public class Elevator extends EventEmitter{
       @ ensures status.targetFloor == requests.get(0).getStopFloor; @*/
     public void launch() {
         new Thread(new ElevatorThread(this)).start();
-        this.emit(ElevatorEvent.LAUNCH, status.currentFloor);
+        this.emit(ElevatorEvent.LAUNCH, status.getCurrentFloor());
 
         this.on(ElevatorEvent.OPEN, data -> {
             int currentFloor = (Integer) data;
@@ -76,7 +76,7 @@ public class Elevator extends EventEmitter{
       @ ensures \result == Elevator @*/
     public Elevator innerPress(int targetFloor, Human presser) {
         InnerRequest req = new InnerRequest()
-                .setCurrentFloor(status.currentFloor)
+                .setCurrentFloor(status.getCurrentFloor())
                 .setTargetFloor(targetFloor)
                 .setPresser(presser);
         requests.add(req);
@@ -103,7 +103,7 @@ public class Elevator extends EventEmitter{
 
         first = requests.get(0);
         // set the targetFloor
-        status.targetFloor = first.getStopFloor();
+        status.setTargetFloor(first.getStopFloor());
     }
 
     /**
@@ -114,8 +114,8 @@ public class Elevator extends EventEmitter{
       @		|| requests.size() > 0);
       @	assignable request; @*/
     private void sort(List<Request> requests){
-        int currentFloor = status.currentFloor;
-        Direction currentDirection = status.direction;
+        int currentFloor = status.getCurrentFloor();
+        Direction currentDirection = status.getDirection();
 
         // Going up, for example, all the requests should be:
         // 1. Floor request is bigger than the elevator current floor

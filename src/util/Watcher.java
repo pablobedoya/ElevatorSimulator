@@ -7,7 +7,7 @@ import java.text.MessageFormat;
 /**
  * System's monitor
  */
-public class Watcher{
+public class Watcher {
 	/*@	requires elevator != null; @*/
     public /*@ pure @*/ void watch(Elevator elevator) {
         elevator.on(ElevatorEvent.LAUNCH, data -> {

@@ -19,6 +19,9 @@ public class ElevatorEvent extends EventType {
             ENTER = stub(),
             LEAVE = stub();
 
+    /*@	
+	  @	assignable \nothing;
+	  @	ensures \result == ElevatorEvent; @*/
     public static ElevatorEvent stub(){
         return new ElevatorEvent();
     }

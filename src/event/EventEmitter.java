@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 事件发生器基类
- * 所有想要获得事件监听/发送能力的类需要继承这个基类
+ * Event Generator base class
+ * All classes want to get the event listeners / transmit capabilities need to extend this base class
  */
 public class EventEmitter {
     /**
-     * 添加事件监听
-     * @param type 事件类型
-     * @param callback 回调函数
+     * Adding event listeners
+     * @param type
+     * @param callback
      */
     public void on(EventType type, Callback callback)  {
         List<Callback> callbacks = getCallbacks(type);
@@ -21,10 +21,10 @@ public class EventEmitter {
     }
 
     /**
-     * 发送指定的事件
-     * @param type 事件类型
-     * @param data 事件数据,可选
-     * @param <T> 范型类型
+     * Sends the specified event
+     * @param type
+     * @param data
+     * @param <T>
      */
     public <T> void emit(EventType type, T... data){
         List<Callback> callbacks = getCallbacks(type);
@@ -34,10 +34,10 @@ public class EventEmitter {
     private Map<EventType,List<Callback>> callbackMap = new HashMap<EventType,List<Callback>>();
 
     /**
-     * 获取指定事件类型对应的回调函数列表
-     * 如果还没有列表,就立即创建一个(惰性初始化)
-     * @param type 事件类型
-     * @return 事件类型对应回调函数列表(必不为空)
+     * Get a list of specified event type callback function
+     * If you do not list, create a (lazy initialization) now
+     * @param type
+     * @return
      */
     private List<Callback> getCallbacks(EventType type){
         List<Callback> callbacks = callbackMap.get(type);

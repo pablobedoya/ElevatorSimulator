@@ -3,7 +3,7 @@ package core;
 import util.Log;
 
 /**
- * 电梯主线程行为
+ * Comportamento da thread principal do elevador
  */
 public class ElevatorThread implements Runnable{
     public static int TIME_INTERVAL = 1000;
@@ -18,27 +18,27 @@ public class ElevatorThread implements Runnable{
     @Override
     public void run() {
         while(true){
-            // 到达目标楼层,开门
-            if(status.isMoving && status.currentFloor == status.targetFloor){
-                status.isOpen = true;
-                status.isMoving = false;
-                ele.emit(ElevatorEvent.OPEN, status.currentFloor);
+            // Se alcan�ou o piso de destino, abrir a porta
+            if(status.isMoving() && status.getCurrentFloor() == status.getTargetFloor()){
+                status.setOpen(true);
+                status.setMoving(false);
+                ele.emit(ElevatorEvent.OPEN, status.getCurrentFloor());
             }
-            // 关门
-            else if(status.isOpen){
-                status.isOpen = false;
-                ele.emit(ElevatorEvent.CLOSE, status.currentFloor);
+            // fechado
+            else if(status.isOpen()){
+                status.setOpen(false);
+                ele.emit(ElevatorEvent.CLOSE, status.getCurrentFloor());
             }
-            // 没有达到目标楼层,则进行移动
-            else if(status.targetFloor != 0 && status.currentFloor != status.targetFloor){
-                if(status.currentFloor < status.targetFloor) moveFloor(status, true);
+            // Se n�o alcan�ou o piso de destino, continuar em movimento
+            else if(status.getTargetFloor() != 0 && status.getCurrentFloor() != status.getTargetFloor()){
+                if(status.getCurrentFloor() < status.getTargetFloor()) moveFloor(status, true);
                 else moveFloor(status, false);
 
-                status.isMoving = true;
+                status.setMoving(true);
 
-                ele.emit(ElevatorEvent.MOVING, status.currentFloor);
+                ele.emit(ElevatorEvent.MOVING, status.getCurrentFloor());
             }
-            // 原地等待
+            // em espera
             else{
                 ele.emit(ElevatorEvent.PENDING);
             }
@@ -46,26 +46,26 @@ public class ElevatorThread implements Runnable{
             try {
                 Thread.sleep(TIME_INTERVAL);
             } catch (InterruptedException e) {
-                Log.error("电梯主线程被中断", e);
+                Log.error("Thread principal do elevador interrompida", e);
                 break;
             }
         }
     }
 
     /**
-     * 将电梯的楼层移动一层
-     * @param status 电梯状态对象
-     * @param isIncrease 移动方向
+     * Piso do elevador em movimento
+     * @param status Objeto de estado do elevador
+     * @param isIncrease Dire��o do movimento
      */
     private void moveFloor(ElevatorStatus status, boolean isIncrease){
         if(isIncrease){
-            status.currentFloor++;
-            if(status.currentFloor == 0)
-                status.currentFloor++;
-        }else{
-            status.currentFloor--;
-            if(status.currentFloor == 0)
-                status.currentFloor--;
+            status.setCurrentFloor(status.getCurrentFloor() + 1);
+            if(status.getCurrentFloor() == 0)
+                status.setCurrentFloor(status.getCurrentFloor() + 1);
+        } else {
+            status.setCurrentFloor(status.getCurrentFloor() - 1);
+            if(status.getCurrentFloor() == 0)
+                status.setCurrentFloor(status.getCurrentFloor() - 1);
         }
     }
 }

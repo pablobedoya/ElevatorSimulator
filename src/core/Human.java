@@ -3,96 +3,116 @@ package core;
 import event.EventEmitter;
 
 /**
- * 电梯乘客类
+ * Passageiros do elevador
  */
 public class Human extends EventEmitter{
-    private int currentFloor = 0;
-    private int targetFloor = 0;
-    private int weight = 0;
-    private String name;
+    private /*@ spec_public @*/ int currentFloor = 0;
+    private /*@ spec_public @*/ int targetFloor = 0;
+    private /*@ spec_public @*/ int weight = 0;
+    private /*@ spec_public @*/ String name;
 
-    private Elevator elevator;
+    private /*@ spec_public non_null @*/ Elevator elevator;
 
-    public Human(){
+    public Human() {
         this.on(ElevatorEvent.ENTER, data -> {
-            // 在电梯内按下按钮
+            // Pressionar o bot�o do elevador
             elevator.innerPress(targetFloor, this);
         });
     }
 
     /**
-     * 让该乘客在外部按下电梯按钮
+     * Deixar o passageiro no piso e pressionar o bot�o do elevador
      */
-    public Human go(){
+    public Human go() {
         elevator.outerPress(currentFloor > targetFloor ? Direction.DOWN : Direction.UP,
                 currentFloor, this);
         return this;
     }
 
     /**
-     * 设置乘客对电梯的各种回调操作
+     * Definir a a��o de retorno de chamada para v�rios elevadores de passageiros
      */
-    private void setActions(){
+    private /*@ pure @*/ void setActions() {
         elevator.on(ElevatorEvent.OPEN, data -> {
             int openFloor = (Integer) data;
 
-            // 如果电梯停在了自己的楼层
+            // Se o elevador parou no seu piso
             if (openFloor == currentFloor) {
-                // 进入电梯,触发电梯和自己的进入事件
+                // Entre no elevador e acione seu evento de entrada
                 elevator.emit(ElevatorEvent.ENTER, this);
                 this.emit(ElevatorEvent.ENTER, this);
 
             } else if (openFloor == targetFloor) {
-                // 离开电梯
+                // Deixar o elevador
                 elevator.emit(ElevatorEvent.LEAVE, this);
             }
         });
     }
 
-    public int getCurrentFloor() {
+    /*@	ensures \result == currentFloor; @*/
+    public /*@ pure @*/ int getCurrentFloor() {
         return currentFloor;
     }
 
-    public Human setCurrentFloor(int currentFloor) {
-        this.currentFloor = currentFloor;
+    /*@ requires curFloor >= 0;
+	  @	ensures currentFloor == curFloor;
+	  @	ensures \result == Human; @*/
+    public Human setCurrentFloor(int curFloor) {
+        currentFloor = curFloor;
         return this;
     }
 
-    public int getTargetFloor() {
+    /*@	ensures \result == targetFloor; @*/
+    public /*@ pure @*/ int getTargetFloor() {
         return targetFloor;
     }
-
-    public Human setTargetFloor(int targetFloor) {
-        this.targetFloor = targetFloor;
+    
+    /*@ requires targFloor >= 0;
+	  @	ensures targetFloor == targFloor;
+	  @	ensures \result == Human; @*/
+    public Human setTargetFloor(int targFloor) {
+        targetFloor = targFloor;
         return this;
     }
 
-    public int getWeight() {
+    /*@	ensures \result == weight; @*/
+    public /*@ pure @*/ int getWeight() {
         return weight;
     }
 
-    public Human setWeight(int weight) {
-        this.weight = weight;
+    /*@ requires w >= 0;
+	  @	ensures weight == w;
+	  @	ensures \result == Human; @*/
+    public Human setWeight(int w) {
+        weight = w;
         return this;
     }
 
-    public Elevator getElevator() {
+    /*@	ensures \result == elevator; @*/
+    public /*@ pure @*/ Elevator getElevator() {
         return elevator;
     }
 
-    public Human setElevator(Elevator elevator) {
-        this.elevator = elevator;
+    /*@ requires elev >= 0;
+	  @	ensures elevator == elev;
+	  @	ensures \result == Human; @*/
+    public Human setElevator(Elevator elev) {
+        elevator = elev;
         setActions();
 
         return this;
     }
 
-    public String getName() {
+    /*@	ensures \result == name; @*/
+    public /*@ pure @*/ String getName() {
         return name;
     }
 
-    public Human setName(String name) {
-        this.name = name;
+    /*@ requires n != "";
+	  @	ensures name.equals(n);
+	  @	ensures \result == Human; @*/
+    public Human setName(String n) {
+        name = n;
         return this;
     }
 }
