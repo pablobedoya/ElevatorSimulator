@@ -1,7 +1,7 @@
 package core;
 
 /**
- * 电梯运行方向
+ * Dire��o de deslocamento do elevador
  */
 public enum Direction {
     UP, DOWN

@@ -10,49 +10,49 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 电梯类
+ * Classe Elevator
  */
 public class Elevator extends EventEmitter{
-    // 电梯请求列表
-    private List<Request> requests = new LinkedList<>();
-    // 电梯状态值
+    // Lista de pedidos de elevador
+    private List<Request> requests = new LinkedList<Request>();
+    // Estado do elevador
     ElevatorStatus status = new ElevatorStatus();
 
     /**
-     * 电梯启动
+     * Elevador partindo
      */
     public void launch() {
-        // 启动电梯主线程
+        // Iniciando a thread principal
         new Thread(new ElevatorThread(this)).start();
         this.emit(ElevatorEvent.LAUNCH, status.currentFloor);
 
-        // 移除所有已经到达的请求
+        // Removendo todas as solicitações que já chegaram
         this.on(ElevatorEvent.OPEN, data -> {
             int currentFloor = (Integer) data;
             requests = requests.stream().filter((req) -> !(req.stopFloor == currentFloor))
                     .collect(Collectors.toList());
         });
 
-        // 关门事件,执行下一个请求
+        // Elevador fechado, executando próximo pedido
         this.on(ElevatorEvent.CLOSE, data -> updateTarget());
     }
 
     /**
-     * 电梯外部按钮被按下执行方法
-     * @param direction 按下的方向
-     * @param currentFloor 当前所在的楼层
-     * @param presser 按下按钮的人
-     * @return 自身,实现链式调用
+     * Botão externo do elevador é pressionado
+     * @param direction Diereção
+     * @param currentFloor Piso atual
+     * @param presser Pessoa que pressionou o botão
+     * @return Elevator
      */
     public Elevator outerPress(Direction direction, int currentFloor, Human presser) {
-        // 构造外部按钮请求,添加到外部请求队列中
+        // Configurando solicitações de botões externos para adicinoar à lista de solicitações
         OuterRequest req = new OuterRequest()
                 .setDirection(direction)
                 .setCurrentFloor(currentFloor)
                 .setPresser(presser);
         requests.add(req);
 
-        // 触发事件
+        // Evento disparador
         this.emit(ElevatorEvent.OUTER_PRESSED, req);
         updateTarget();
 
@@ -60,20 +60,20 @@ public class Elevator extends EventEmitter{
     }
 
     /**
-     * 内部电梯按钮被按下执行方法
-     * @param targetFloor 要去的楼层
-     * @param presser 按下按钮的人
-     * @return 电梯实例
+     * Botão interno do elevador é pressionado
+     * @param targetFloor Piso de destino
+     * @param presser Pessoa que pressionou o botão
+     * @return Elevator
      */
     public Elevator innerPress(int targetFloor, Human presser) {
-        // 构造外部按钮请求,添加到外部请求队列中
+    	// Configurando solicitações de botões externos para adicinoar à lista de solicitações
         InnerRequest req = new InnerRequest()
                 .setCurrentFloor(status.currentFloor)
                 .setTargetFloor(targetFloor)
                 .setPresser(presser);
         requests.add(req);
 
-        // 触发事件
+        // Evento disparador
         this.emit(ElevatorEvent.INNER_PRESSED, req);
         updateTarget();
 
@@ -81,49 +81,49 @@ public class Elevator extends EventEmitter{
     }
 
     /**
-     * 更新电梯的移动目标
-     * 间接触发电梯移动
+     * Atualizar piso do elevador em movimento
+     * Disparo indireto, elevador em movimento
      */
     private void updateTarget(){
-        // 首先要处理的请求,之后给出具体的值
+        // Primeira solicitação a ser processada, depois de passar um valor específico
         Request first;
-        // 将请求列表排序,如果电梯正在向上,则根据楼层高度倒序排列,优先处理最高楼层
-        // 反之亦然
+        // A lista de solicitações é ordenada, se o elevador está indo para cima, em seguida,
+        // pela ordem inversa de acordo com a altura do piso, prioriza o piso mais alto e vice-versa
         sort(requests);
         if(requests.size() == 0) return;
 
         first = requests.get(0);
-        // 设定目标楼层
+        // Estabelecer um piso de destino
         status.targetFloor = first.getStopFloor();
     }
 
     /**
-     * 将所有请求按照优先级排序
-     * @param requests 请求的集合
+     * Todos as solicitações são classificadas de acordo com a prioridade
+     * @param requests Solicitação
      */
     private void sort(List<Request> requests){
-        // 电梯当前的楼层
+        // O piso atual do elevador
         int currentFloor = status.currentFloor;
         Direction currentDirection = status.direction;
 
-        // 以电梯向上为例,所有请求分成以下几类:
-        // 1. 也是向上且请求楼层比当前当前电梯楼层高的
-        // 2. 向下的请求
-        // 3. 向上的请求且请求楼层比当前当前电梯楼层低的
-        // 电梯向下时相反
+        // Para subir, por exemplo, todos as solicitações são divididas nas seguintes categorias:
+        // 1. Se a solicitação é maior do que o piso atual do elevador
+        // 2. Solicitação para descer
+        // 3. Solicitação é menor do que o piso atual com elevador
+        // Caso contrário, o elevador desce
 
-        // 第一类请求
+        // O primeiro tipo de solicitação
         List<Request> list1 = requests.stream().filter( req -> {
-            // 是否同向
+            // Se na mesma direção
             boolean isSame = req.getDirection() == currentDirection;
-            // 是否优先
+            // É prioridade
             boolean isSuper = (currentDirection == Direction.UP)?
                     (req.getStopFloor() >= currentFloor)
                     :(req.getStopFloor() < currentFloor);
 
             return isSame && isSuper;
         }).sorted( (lhs,rhs) -> {
-            // 第一类中,电梯向上时,越低越优先
+        	// No primeiro tipo, subir é a menor prioridade
             if(currentDirection == Direction.UP){
                 return lhs.getStopFloor() - rhs.getStopFloor();
             }else{
@@ -131,13 +131,13 @@ public class Elevator extends EventEmitter{
             }
         }).collect(Collectors.toList());
 
-        // 第二类请求
+        // O segundo tipo de solicitação
         List<Request> list2 = requests.stream().filter( req -> {
-            // 取反向的
+            // Se na direção reversa
             boolean isSame = (req.getDirection() == currentDirection);
             return !isSame;
         }).sorted( (lhs,rhs) -> {
-            // 第二类中,电梯向上时越高越优先
+            // No segundo tipo, subir é a maior prioridade
             if(currentDirection == Direction.UP){
                 return -(lhs.getStopFloor() - rhs.getStopFloor());
             }else{
@@ -146,18 +146,18 @@ public class Elevator extends EventEmitter{
         }).collect(Collectors.toList());
 
 
-        // 第三类请求
+        // O terceiro tipo de solicitação
         List<Request> list3 = requests.stream().filter( req -> {
-            // 是否同向
+            // Se na mesma direção
             boolean isSame = req.getDirection() == currentDirection;
-            // 是否优先
+            // É prioridade
             boolean isSuper = (currentDirection == Direction.UP)?
                     (req.getStopFloor() >= currentFloor)
                     :(req.getStopFloor() < currentFloor);
 
             return isSame && !isSuper;
         }).sorted( (lhs,rhs) -> {
-            // 第三类中,电梯向上时越低越优先
+            // No terceiro tipo, subir é a maior prioridade
             if(currentDirection == Direction.UP){
                 return lhs.getStopFloor() - rhs.getStopFloor();
             }else{
@@ -167,17 +167,17 @@ public class Elevator extends EventEmitter{
 
         requests.clear();
 
-        // 组合三类请求
+        // Uma combinação de três tipos de solicitação
         requests.addAll(list1);
         requests.addAll(list2);
         requests.addAll(list3);
     }
 
-    // 覆盖父类方法
+    // Substituir o método da classe pai
     public <T> void emit(ElevatorEvent type, T... data) {
         super.emit(type, data);
     }
-    // 覆盖父类方法
+    // Substituir o método da classe pai
     public void on(ElevatorEvent type, Callback callback) {
         super.on(type, callback);
     }
