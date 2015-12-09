@@ -46,7 +46,7 @@ public class Elevator extends EventEmitter{
       @ assignable status.targetFloor;
       @ ensures requests.size() > \old(requests).size();
       @ ensures status.targetFloor == requests.get(0).getStopFloor;
-      @ ensures \result == Elevator @*/
+      @ ensures \result == Elevator; @*/
     public Elevator outerPress(Direction direction, int currentFloor, Human presser) {
         OuterRequest req = new OuterRequest()
                 .setDirection(direction)
@@ -73,7 +73,7 @@ public class Elevator extends EventEmitter{
       @ assignable status.targetFloor;
       @ ensures requests.size() > \old(requests).size();
       @ ensures status.targetFloor == requests.get(0).getStopFloor;
-      @ ensures \result == Elevator @*/
+      @ ensures \result == Elevator; @*/
     public Elevator innerPress(int targetFloor, Human presser) {
         InnerRequest req = new InnerRequest()
                 .setCurrentFloor(status.getCurrentFloor())

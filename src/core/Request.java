@@ -14,7 +14,7 @@ public class Request {
     }
 
     /*@	requires direction == UP ||
-      @		direction == DOWN
+      @		direction == DOWN;
       @	ensures \result == direction; @*/
     public /*@ pure @*/ Direction getDirection() {
         return direction;
