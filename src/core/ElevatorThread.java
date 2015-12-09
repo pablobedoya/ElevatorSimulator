@@ -18,7 +18,7 @@ public class ElevatorThread implements Runnable{
     @Override
     public void run() {
         while(true){
-            // Se alcançou o piso de destino, abrir a porta
+            // Se alcancou o piso de destino, abrir a porta
             if(status.isMoving() && status.getCurrentFloor() == status.getTargetFloor()){
                 status.setOpen(true);
                 status.setMoving(false);
@@ -29,7 +29,7 @@ public class ElevatorThread implements Runnable{
                 status.setOpen(false);
                 ele.emit(ElevatorEvent.CLOSE, status.getCurrentFloor());
             }
-            // Se não alcançou o piso de destino, continuar em movimento
+            // Se nao alcancou o piso de destino, continuar em movimento
             else if(status.getTargetFloor() != 0 && status.getCurrentFloor() != status.getTargetFloor()){
                 if(status.getCurrentFloor() < status.getTargetFloor()) moveFloor(status, true);
                 else moveFloor(status, false);
@@ -55,7 +55,7 @@ public class ElevatorThread implements Runnable{
     /**
      * Piso do elevador em movimento
      * @param status Objeto de estado do elevador
-     * @param isIncrease Direção do movimento
+     * @param isIncrease Direcao do movimento
      */
     private void moveFloor(ElevatorStatus status, boolean isIncrease){
         if(isIncrease){

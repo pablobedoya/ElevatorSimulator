@@ -5,7 +5,7 @@ import event.EventEmitter;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
+//import java.util.stream.Collectors;
 
 public class Elevator extends EventEmitter{
     // Request list for elevator
@@ -15,18 +15,20 @@ public class Elevator extends EventEmitter{
     /**
      * Start elevator
      */
-    /*@	requires (status != null && status.currentFlor >= 0);
+    /*@	requires (status != null && status.currentFloor >= 0);
       @	assignable requests;
       @	assignable status.targetFloor;
-      @ ensures status.targetFloor == requests.get(0).getStopFloor; @*/
+      @ ensures status.targetFloor == requests.get(0).getStopFloor(); @*/
     public void launch() {
         new Thread(new ElevatorThread(this)).start();
         this.emit(ElevatorEvent.LAUNCH, status.getCurrentFloor());
 
         this.on(ElevatorEvent.OPEN, data -> {
             int currentFloor = (Integer) data;
+            /*
             requests = requests.stream().filter((req) -> !(req.stopFloor == currentFloor))
                     .collect(Collectors.toList());
+                    */
         });
 
         this.on(ElevatorEvent.CLOSE, data -> updateTarget());
@@ -45,7 +47,7 @@ public class Elevator extends EventEmitter{
       @ assignable requests;
       @ assignable status.targetFloor;
       @ ensures requests.size() > \old(requests).size();
-      @ ensures status.targetFloor == requests.get(0).getStopFloor;
+      @ ensures status.targetFloor == requests.get(0).getStopFloor();
       @ ensures \result == Elevator; @*/
     public Elevator outerPress(Direction direction, int currentFloor, Human presser) {
         OuterRequest req = new OuterRequest()
@@ -72,7 +74,7 @@ public class Elevator extends EventEmitter{
       @ assignable requests;
       @ assignable status.targetFloor;
       @ ensures requests.size() > \old(requests).size();
-      @ ensures status.targetFloor == requests.get(0).getStopFloor;
+      @ ensures status.targetFloor == requests.get(0).getStopFloor();
       @ ensures \result == Elevator; @*/
     public Elevator innerPress(int targetFloor, Human presser) {
         InnerRequest req = new InnerRequest()
@@ -94,7 +96,7 @@ public class Elevator extends EventEmitter{
       @		|| requests.size() > 0);
       @	assignable requests;
       @	assignable status.targetFloor;
-      @ ensures status.targetFloor == requests.get(0).getStopFloor; @*/
+      @ ensures status.targetFloor == requests.get(0).getStopFloor(); @*/
     private void updateTarget(){
         Request first;
         // sort the requests
@@ -112,7 +114,7 @@ public class Elevator extends EventEmitter{
      */
     /*@	requires (requests != null
       @		|| requests.size() > 0);
-      @	assignable request; @*/
+      @	assignable requests; @*/
     private void sort(List<Request> requests){
         int currentFloor = status.getCurrentFloor();
         Direction currentDirection = status.getDirection();
@@ -123,6 +125,7 @@ public class Elevator extends EventEmitter{
         // 3. Going up request, but the floor request is lower than the elevator current floor
 
         // first case
+        /*
         List<Request> list1 = requests.stream().filter( req -> {
             // same direction
             boolean isSame = req.getDirection() == currentDirection;
@@ -179,23 +182,18 @@ public class Elevator extends EventEmitter{
         requests.addAll(list1);
         requests.addAll(list2);
         requests.addAll(list3);
+        */
     }
 
     /*@	requires type != null;
-      @	requires callbacks != null;
-      @ public constraint (\forall int i;
-	  @      0 <= i && i < \old(callbacks).size();
-	  @      callbacks.get(i).run(data.length>0 ? data[0] : null)); @*/
+      @*/
     @SuppressWarnings("unchecked")
 	public <T> void emit(ElevatorEvent type, T... data) {
         super.emit(type, data);
     }
     
     /*@	requires type != null;
-      @	requires callback != null;
-      @ assignable callbacks;
-      @ ensures callbacks.size() == \old(callbacks.size()+1)
-	  @      && callbacks.get(\old(callbacks.size()+1)).equals(callback); @*/
+      @*/
     @SuppressWarnings("rawtypes")
 	public void on(ElevatorEvent type, Callback callback) {
         super.on(type, callback);

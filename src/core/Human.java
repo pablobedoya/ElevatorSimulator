@@ -15,13 +15,13 @@ public class Human extends EventEmitter{
 
     public Human() {
         this.on(ElevatorEvent.ENTER, data -> {
-            // Pressionar o botão do elevador
+            // Pressionar o botao do elevador
             elevator.innerPress(targetFloor, this);
         });
     }
 
     /**
-     * Deixar o passageiro no piso e pressionar o botão do elevador
+     * Deixar o passageiro no piso e pressionar o botao do elevador
      */
     public Human go() {
         elevator.outerPress(currentFloor > targetFloor ? Direction.DOWN : Direction.UP,
@@ -30,7 +30,7 @@ public class Human extends EventEmitter{
     }
 
     /**
-     * Definir a ação de retorno de chamada para vários elevadores de passageiros
+     * Definir a acao de retorno de chamada para varios elevadores de passageiros
      */
     private /*@ pure @*/ void setActions() {
         elevator.on(ElevatorEvent.OPEN, data -> {

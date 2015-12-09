@@ -6,7 +6,7 @@ import event.EventType;
  * Tipo de evento do elevador
  */
 public class ElevatorEvent extends EventType {
-    // Definição de eventos específicos, imitando enum
+    // Definicao de eventos especificos, imitando enum
     public static ElevatorEvent
             LAUNCH = stub(),
             STOP = stub(),
